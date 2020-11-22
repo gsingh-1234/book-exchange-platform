@@ -8,7 +8,7 @@
         <div>{{ message }}</div>
     {% endif %}
 
-    <form action="{% url 'listing' %}" method="post">
+    <form action="{% url 'listing' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{formset}}
         <button type="submit">Upload</button>

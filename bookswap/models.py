@@ -10,7 +10,7 @@ class Listing(models.Model):
     last_name=models.CharField(max_length=30)
     have=models.CharField(max_length=120)
     want=models.CharField(max_length=120)
-    img=models.ImageField(upload_to="static/",default='static/bookswap/book.svg',null=True)
+    img=models.ImageField(upload_to="images/'",null=True)
 
 
 
