@@ -9,21 +9,23 @@ import django.contrib.auth.hashers as djh
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import modelformset_factory
-from bookswap.models import Listing
+from bookswap.models import Listing,listing_form
 from django.contrib.auth.decorators import login_required
+
 
 @login_required(login_url='/')
 def manage_listing(request):
-    ListingFormSet = modelformset_factory(Listing, fields=('user','first_name','last_name','have','want','img'))
-    if request.method == "POST":
-        formset = ListingFormSet(request.POST, request.FILES,queryset=Listing.objects.filter(first_name__startswith='0'),)
-        
-        if formset.is_valid():
-            formset.save()
-
+    if request.method == 'POST':
+        form = listing_form(request.POST, request.FILES)
+        if form.is_valid():
+            f=form.save(commit=False)
+            f.user=request.user
+            f.save()
+        return render(request, "bookswap/manage_listing.html", {'formset': form})
     else:
-        formset = ListingFormSet(queryset=Listing.objects.filter(first_name__startswith='0'))
-    return render(request, 'bookswap/manage_listing.html', {'formset': formset})
+        form = listing_form()
+        return render(request, "bookswap/manage_listing.html", {'formset': form})
+
 
 def homepg(request):
     return render(request, "bookswap/index")
