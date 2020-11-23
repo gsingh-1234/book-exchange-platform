@@ -39,7 +39,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('Home'))
+            return HttpResponseRedirect(reverse('view_listing'))
         else:
             form = AuthenticationForm(request.POST)
             return render(request, 'bookswap/login.html', {'form': form})
@@ -54,7 +54,7 @@ def logout_view(request):
 
 def register(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('Home'))
+        return HttpResponseRedirect(reverse('view_listing'))
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -63,7 +63,7 @@ def register(request):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            return HttpResponseRedirect(reverse('Home'))
+            return HttpResponseRedirect(reverse('view_listing'))
         else:
             return render(request, 'bookswap/register.html', {'form': form})
     else:
@@ -73,3 +73,12 @@ def register(request):
 
 def test(request):
     return render(request,"bookswap/homepg.html")
+
+def view_listing(request):
+     if request.user.is_authenticated:
+       data=Listing.objects.all()
+       return render(request,"bookswap/view_listings.html",{
+        'data':data
+         })
+     else:
+         return render(request,"bookswap/homepg.html")

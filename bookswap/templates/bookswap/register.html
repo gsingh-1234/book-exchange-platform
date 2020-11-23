@@ -10,7 +10,7 @@
 
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
-        {{form}}
+        {{form.as_p}}
         <button type="submit">Signup</button>
     </form>
     <div class="w-25 p-3">
