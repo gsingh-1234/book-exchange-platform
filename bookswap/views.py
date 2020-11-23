@@ -82,3 +82,20 @@ def view_listing(request):
          })
      else:
          return render(request,"bookswap/homepg.html")
+
+def matches(request):
+    if request.user.is_authenticated:
+     uname=request.user.username
+     j=0
+     data=Listing.objects.all()
+     for i in Listing.objects.all():
+      if(str(i.user)==uname):
+        j=1
+     if j==1:
+      return render(request,"bookswap/matches.html",{
+        'data':data
+         })
+     else:
+         return render(request,"bookswap/nomatch.html")
+    else:
+         return render(request,"bookswap/homepg.html")
