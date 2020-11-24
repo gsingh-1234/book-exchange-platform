@@ -9,7 +9,7 @@ import django.contrib.auth.hashers as djh
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import modelformset_factory
-from bookswap.models import Listing,listing_form
+from bookswap.models import Listing,listing_form,Request
 from django.contrib.auth.decorators import login_required
 
 
@@ -71,7 +71,16 @@ def register(request):
         return render(request, 'bookswap/register.html', {'form': form})
 
 
-def test(request):
+def request(request):
+    for i in Listing.objects.all():
+        print(request.session['uid'])
+        print(i.id)
+        if (i.id==request.session['uid']):
+            print("here")
+            obj=Request(listing_id=i,requested_by=request.user)
+            print(obj.listing_id)
+            obj.save()
+
     return render(request,"bookswap/homepg.html")
 
 def view_listing(request):
@@ -91,6 +100,7 @@ def matches(request):
      for i in Listing.objects.all():
       if(str(i.user)==uname):
         j=1
+        request.session['uid'] =i.id
      if j==1:
       return render(request,"bookswap/matches.html",{
         'data':data
